@@ -2,18 +2,21 @@
 This is a simple maze game implemented for the [bitwise challenge](https://github.com/zesterer/the-bitwise-challenge).
 
 # Usage
-Open `index.html` in your browser.
-The current state can be viewed as a url parameter.
+Open `index.html` in your browser to view it locally. I'll host it somewhere eventually.
 
-# state
+You can move through the maze with `wasd` or the arrow keys. Try to reach the green goal!
+
+The current state can be viewed in the url.
+
+# State
 The lower 32 bits are used as a seed for generating the maze using a randomized depth first search algorithm.
 
-The size of the maze is determined by a two bit 'scale'.
-The four sizes are small (16x16), medium (64x64), large (256x256) and xlarge(1024x1024). This corresponds to using 4, 6, 8 or 10 bits to encode both the x and y position of the player.
+The size of the maze is determined by a 4 bit 'scale' factor.
 
-This gives us at least 10 bits left over to play with. Not sure what to do with that yet.
+The player's x and y coordinates can be stored easily with 12 bits each.
 
 state: `<unused:4><x:12><y:12><scale:4><seed:32>`
 
-# reference
+# Reference
 * [randomized depth first search](https://en.wikipedia.org/wiki/Maze_generation_algorithm#Randomized_depth-first_search)
+* [js seedable PRNGs](https://gist.github.com/blixt/f17b47c62508be59987b)

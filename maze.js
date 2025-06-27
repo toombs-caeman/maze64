@@ -1,8 +1,5 @@
 const canvas = document.getElementsByTagName('canvas')[0]
 const ctx = canvas.getContext("2d");
-ctx.webkitImageSmoothingEnabled = false
-ctx.mozImageSmoothingEnabled = false
-ctx.imageSmoothingEnabled = false
 
 const cell = 6 // pixel width of a position on the grid
 const wall = 2 // pixel width of a maze wall
@@ -18,6 +15,7 @@ const forground = 'black'
 // format number as a fixed length hex string
 const hex = (i, l) => i.toString(16).padStart(l, '0')
 // 32-bit PRNG. this doesn't have to be very good
+// but we do need to be able to seed it.
 // https://gist.github.com/blixt/f17b47c62508be59987b
 const mb32 = a => (t) => (a = a + 1831565813 | 0, t = Math.imul(a ^ a >>> 15, 1 | a), t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t, (t ^ t >>> 14) >>> 0) / 2 ** 32;
 
@@ -35,7 +33,7 @@ const state = {
             // the high nibble is not used
             this.x = parseInt(state.slice(1, 4), 16)
             this.y = parseInt(state.slice(4, 7), 16)
-            this.scale = parseInt(state.slice(7, 8), 16) // TODO this is ignored right now
+            this.scale = parseInt(state.slice(7, 8), 16)
             this.seed = parseInt(state.slice(8), 16)
         } else {
             this.seed = Math.round(Math.random() * 0xFFFF)
@@ -44,10 +42,8 @@ const state = {
             this.scale = Math.round(Math.random() * 4)
             this.updateUrl()
         }
-        // TODO calculate grid dimensions from scale
-        this.height = this.width = 20 + 20 * this.scale
-        canvas.width = this.width * (cell + wall) + wall
-        canvas.height = this.height * (cell + wall) + wall
+        this.height = this.width = 20 * (this.scale + 1)
+        canvas.height = canvas.width = this.width * size + wall
 
         // make sure to only use the seeded rng
         this.rand = mb32(this.seed)
